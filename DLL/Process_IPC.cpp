@@ -221,23 +221,3 @@ public:
 Process* Process::createProcess(){
 	return new process();
 }
-
-int initAP(AppProtocol *ap) {
-	ap->end = 'n';
-	ap->fileSize = 0;
-	memset(ap->type, NULL, 10);
-	memset(ap->filePath, NULL, 260);
-	memset(ap->data, NULL, BuffSize);
-	return 0;
-}
-
-int cptoi(char* s) {
-	int a = atoi(s);
-	return a;
-}
-
-int itocp(int a, char* s) {
-	string str = to_string(a);
-	s = (char*)str.c_str();
-	return 0;
-}
