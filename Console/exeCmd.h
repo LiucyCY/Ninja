@@ -3,6 +3,7 @@
 #include<windows.h>
 #include<iostream>
 #include<string>
+#include<vector>
 #define _CRT_SECURE_NO_WARNINGS 1
 #define BuffSize 1024
 #pragma warning(disable:4996)
@@ -15,7 +16,7 @@ public:
 	Process *proc = Process::createProcess();
 	AppProtocol *ap;
 
-	exeCmd() { ap = (AppProtocol*)malloc(sizeof(AppProtocol)); initAP(ap); }
+	exeCmd() { ap = (AppProtocol*)malloc(sizeof(AppProtocol)); proc->initAP(ap); }
 
 	int consoleUI() { 
 		int flag = -1;
@@ -40,28 +41,22 @@ public:
 	}
 
 	int parsing(string cmd) {
-		string s;
+		vector<string> result = split(cmd, " ");
 		const char *type = "cmd";
 		const char *command = "";
-		if (cmd == "ls") {
+		if (result[0] == "ls") {
 			command = "dir";
 			memcpy(ap->type, type, strlen(type));
 			memcpy(ap->data, command, strlen(command));
 			proc->wPipe(ap);
 		}
-		else if ( cmd == "poweroff" ) {
-			s = "shutdown";
-		}
-		else if ( cmd == "whoami" ) {
-			s = "Are you root?";
-		}
-		else if (cmd == "pwd") {
+		else if (result[0] == "pwd") {
 			command = "chdir";
 			memcpy(ap->type, type, strlen(type));
 			memcpy(ap->data, command, strlen(command));
 			proc->wPipe(ap);
 		}
-		else if (cmd == "exit") {
+		else if (result[0] == "exit") {
 			type = "exit";
 			command = "exit";
 			memcpy(ap->type, type, strlen(type));
@@ -69,10 +64,40 @@ public:
 			proc->wPipe(ap);
 			return -1;
 		}
+		else if(result[0] == "sendFile"){
+			cout << "执行新进程\n";
+
+			command = "chdir";
+			memcpy(ap->type, type, strlen(type));
+			memcpy(ap->data, command, strlen(command));
+			proc->wPipe(ap);
+		}
+		else if(result[0] == "downFile"){
+			cout << "执行新进程\n";
+
+			command = "chdir";
+			memcpy(ap->type, type, strlen(type));
+			memcpy(ap->data, command, strlen(command));
+			proc->wPipe(ap);
+		}
 		else {
 			return 0;
 		}
 		return 0;
+	}
+
+	vector<string> split(string cmd, string c) {
+		vector<string> result;
+		int flag = 0;
+		while (flag != cmd.npos) {
+			flag = cmd.find_first_of(c);
+			if (flag > 0)
+				result.push_back(cmd.substr(0, flag));
+			cmd = cmd.substr(flag+1);
+		}
+		if (cmd.length() > 0)
+			result.push_back(cmd);
+		return result;
 	}
 
 };
