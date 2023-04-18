@@ -1,4 +1,7 @@
 #pragma once
+#include<string>
+#include<iostream>
+using namespace std;
 #ifndef IPC_H
 #define IPC_H
 #define BuffSize 1024
@@ -17,6 +20,7 @@ class IpcAPI Process {
 public:
 	static Process* createProcess();
 	virtual int createNewProcess(const char*) = 0;
+	virtual int createNewProcess(const char*, char*) = 0;
 	virtual int exitProcess() = 0;
 	virtual int initPipe() = 0;
 	virtual int serverConnPipe() = 0;
@@ -31,5 +35,9 @@ public:
 	virtual int cptoi(char*) = 0;
 	virtual int itocp(int, char*) = 0;
 };
+
+int initAP(AppProtocol *ap);
+int cptoi(char* s);
+int itocp(int a, char* s);
 
 #endif

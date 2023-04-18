@@ -46,6 +46,34 @@ public:
 		return 0;
 	};
 
+	int createNewProcess(const char* fileName, char* param) {
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+		ZeroMemory(&pi, sizeof(pi));
+		ZeroMemory(&si, sizeof(si));
+		unsigned long exitCode = -1;
+		int flag = 0;
+		flag = CreateProcess(
+			fileName,
+			param,
+			NULL,
+			NULL,
+			FALSE,
+			0,
+			NULL,
+			NULL,
+			&si,
+			&pi
+		);
+		if (flag == 0) {
+			cout << "create process error:" << GetLastError() << "\n";
+			return -1;
+		}
+		// 阻塞等待进程执行完毕
+		WaitForSingleObject(pi.hProcess, INFINITE);
+		return 0;
+	};
+
 	int exitProcess() { return 0; };
 	
 	int initPipe() { 
@@ -192,4 +220,24 @@ public:
 
 Process* Process::createProcess(){
 	return new process();
+}
+
+int initAP(AppProtocol *ap) {
+	ap->end = 'n';
+	ap->fileSize = 0;
+	memset(ap->type, NULL, 10);
+	memset(ap->filePath, NULL, 260);
+	memset(ap->data, NULL, BuffSize);
+	return 0;
+}
+
+int cptoi(char* s) {
+	int a = atoi(s);
+	return a;
+}
+
+int itocp(int a, char* s) {
+	string str = to_string(a);
+	s = (char*)str.c_str();
+	return 0;
 }
